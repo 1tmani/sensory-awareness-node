@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8'><title>CORE V110 | SENSORY NODE</title>
+<link href='https://fonts.googleapis.com/css2?family=Michroma&family=Orbitron:wght@900&display=swap' rel='stylesheet'>
+<style>
+:root{--p:#00f0ff;--s:#ff2e88;--bg:#000;}
+body,html{ margin:0; padding:0; background:#000; color:#fff; font-family:'Michroma'; overflow:hidden; }
+canvas{ position:fixed; inset:0; z-index:1; }
+.sensory-hud{ position:fixed; inset:0; z-index:100; pointer-events:none; padding:50px; display:flex; flex-direction:column; justify-content:space-between; }
+.stat-box{ background:rgba(0,0,0,0.9); border-left:2px solid var(--p); padding:20px; font-size:10px; letter-spacing:5px; backdrop-filter:blur(30px); }
+.action-trigger{ position:fixed; bottom:50px; right:50px; z-index:200; pointer-events:all; }
+.btn-sync{ background:transparent; border:1px solid var(--p); color:#fff; padding:20px 50px; cursor:pointer; font-family:'Orbitron'; letter-spacing:10px; transition:0.5s; }
+.btn-sync:hover{ background:var(--p); color:#000; box-shadow:0 0 50px var(--p); }
+</style>
+</head>
+<body>
+<canvas id='field'></canvas>
+<div class='sensory-hud'>
+    <div style='display:flex; justify-content:space-between;'>
+        <div class='stat-box'>LAYER: V110_SENSORY<br>DOMAIN: NEURAL_AWARENESS</div>
+        <div class='stat-box'>STABILITY: <span id='fps-val'>256Hz</span></div>
+    </div>
+    <div class='stat-box' style='width:fit-content;'>SYNC_STATUS: <span id='status' style='color:var(--s);'>DISCONNECTED</span></div>
+</div>
+<div class='action-trigger'><button class='btn-sync' onclick='engine.sync()'>INITIALIZE SENSORY SYNC</button></div>
+<script>
+const canvas=document.getElementById('field'), ctx=canvas.getContext('2d');
+let w, h, t=0, isSynced=false; function res(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; } res();
+const engine = {
+    sync() {
+        isSynced = true; document.getElementById('status').innerText = 'LOCKED';
+        document.getElementById('status').style.color = '#00ff75';
+        const msg = new SpeechSynthesisUtterance('Sensory handshake verified. Neural awareness layer active.');
+        msg.rate = 0.9; window.speechSynthesis.speak(msg);
+    }
+};
+function draw(){ t+=0.01; ctx.fillStyle='rgba(0,0,0,0.15)'; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle=isSynced ? '#00ff75' : 'var(--p)'; ctx.lineWidth=0.5;
+    for(let i=0; i<15; i++){ ctx.beginPath();
+        let r = 100 + i*30 + Math.sin(t+i)*50;
+        ctx.arc(w/2, h/2, r, 0, Math.PI*2); ctx.stroke();
+    } requestAnimationFrame(draw);
+} draw();
+</script></body></html>
